@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ttuny Services | Optimización & Diseño</title>
+    <style>
+        /* --- ESTILOS GENERALES Y MODO OSCURO --- */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: #0b0c10;
+            color: #c5c6c7;
+            overflow-x: hidden;
+        }
+
+        /* --- PANTALLA DE BLOQUEO (LOGIN OBLIGATORIO) --- */
+        #lock-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle, #1f2833 10%, #0b0c10 90%);
+            z-index: 9999;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            transition: opacity 0.5s ease;
+        }
+
+        .login-card {
+            background: #1f2833;
+            padding: 40px;
+            border-radius: 15px;
+            border: 2px solid #66fcf1;
+            box-shadow: 0 0 25px rgba(102, 252, 241, 0.3);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .login-card h2 {
+            color: #fff;
+            margin-bottom: 10px;
+            font-size: 2rem;
+        }
+
+        .login-card p {
+            color: #45a29e;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+        }
+
+        .login-card input {
+            width: 100%;
+            background: #0b0c10;
+            border: 1px solid #45a29e;
+            color: #fff;
+            padding: 12px 15px;
+            border-radius: 6px;
+            outline: none;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .login-card input:focus {
+            border-color: #66fcf1;
+            box-shadow: 0 0 10px rgba(102, 252, 241, 0.5);
+        }
+
+        .login-card button {
+            width: 100%;
+            background: #66fcf1;
+            color: #0b0c10;
+            border: none;
+            padding: 12px;
+            border-radius: 6px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+        }
+
+        .login-card button:hover {
+            background: #45a29e;
+            color: #fff;
+            box-shadow: 0 0 15px rgba(69, 162, 158, 0.5);
+        }
+
+        /* --- CONTENIDO PRINCIPAL (OCULTO AL INICIO) --- */
+        #main-content {
+            display: none;
+        }
+
+        /* --- FONDO ANIMADO HACKER/GAMING --- */
+        .hero-background {
+            position: relative;
+            width: 100%;
+            height: 55vh;
+            background: linear-gradient(rgba(11, 12, 16, 0.85), rgba(11, 12, 16, 0.98)), 
+                        radial-gradient(circle, #1f2833 10%, #0b0c10 90%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .hero-background h1 {
+            font-size: 4rem;
+            color: #66fcf1;
+            text-shadow: 0 0 10px #66fcf1, 0 0 20px #45a29e;
+            animation: pulse 3s infinite alternate;
+            letter-spacing: 2px;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.9; }
+            100% { transform: scale(1.05); opacity: 1; text-shadow: 0 0 15px #66fcf1, 0 0 30px #45a29e; }
+        }
+
+        /* --- BARRA DE NAVEGACIÓN --- */
+        header {
+            position: absolute;
+            top: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            z-index: 10;
+            background: rgba(11, 12, 16, 0.6);
+            backdrop-filter: blur(5px);
+            border-bottom: 1px solid rgba(69, 162, 158, 0.1);
+        }
+
+        .logo-nav {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #66fcf1;
+        }
+
+        .user-tag {
+            color: #fff;
+            font-weight: 500;
+            border-left: 3px solid #66fcf1;
+            padding-left: 10px;
+        }
+
+        /* --- SECCIÓN DE SERVICIOS --- */
+        .services-container {
+            max-width: 1200px;
+            margin: -50px auto 60px auto;
+            padding: 0 20px;
+            position: relative;
+            z-index: 5;
+        }
+
+        .services-title {
+            text-align: center;
+            margin-bottom: 40px;
+            font-size: 2.5rem;
+            color: #fff;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background: #1f2833;
+            border-radius: 12px;
+            padding: 30px;
+            border: 1px solid rgba(102, 252, 241, 0.1);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .service-card:hover {
+            transform: translateY(-8px);
+            border-color: #66fcf1;
+            box-shadow: 0 15px 30px rgba(102, 252, 241, 0.15);
+        }
+
+        .service-card h3 {
+            color: #fff;
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            border-bottom: 2px solid #45a29e;
+            padding-bottom: 10px;
+        }
+
+        .service-card p {
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .btn-ver-mas {
+            background: transparent;
+            color: #66fcf1;
+            border: 2px solid #66fcf1;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            text-transform: uppercase;
+            width: 100%;
+        }
+
+        .btn-ver-mas:hover {
+            background: #66fcf1;
+            color: #0b0c10;
+        }
+
+        /* --- VENTANAS MODALES (DETALLES FLOTANTES) --- */
+        .modal {
+            display: none; 
+            position: fixed; 
+            z-index: 10000; 
+            left: 0;
+            top: 0;
+            width: 100%; 
+            height: 100%; 
+            background-color: rgba(11, 12, 16, 0.9); 
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #1f2833;
+            padding: 35px;
+            border: 2px solid #66fcf1;
+            width: 90%;
+            max-width: 550px;
+            border-radius: 12px;
+            box-shadow: 0 0 30px rgba(102, 252, 241, 0.25);
+            position: relative;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px;
+            right: 20px;
+            color: #c5c6c7;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .close-btn:hover {
+            color: #66fcf1;
+        }
+
+        .modal-content h2 {
+            color: #fff;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #45a29e;
+            padding-bottom: 10px;
+        }
+
+        .modal-content ul {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+
+        .modal-content ul li {
+            margin-bottom: 12px;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .modal-content ul li::before {
+            content: "⚡";
+            margin-right: 10px;
+            color: #66fcf1;
+        }
+
+        .price-tag {
+            background: #0b0c10;
+            border: 1px dashed #66fcf1;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .price-tag span {
+            color: #66fcf1;
+            font-size: 1.6rem;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            text-align: center;
+            padding: 30px;
+            background: #111;
+            font-size: 0.9rem;
+            border-top: 1px solid #1f2833;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- PANTALLA DE BLOQUEO LOGEO OBLIGATORIO -->
+    <div id="lock-screen">
+        <div class="login-card">
+            <h2>Acceso Requerido</h2>
+            <p>Por favor ingresa tus datos para entrar al sistema</p>
+            <input type="text" id="user-input" placeholder="Nombre, Apodo o Apellido">
+            <button onclick="validarAcceso()">Acceder a los Servicios</button>
+        </div>
+    </div>
+
+    <!-- CONTENIDO DE LA WEB (MANDATORIO LOGEARSE PARA VER) -->
+    <div id="main-content">
+        
+        <header>
+            <div class="logo-nav">T_S</div>
+            <div class="user-tag" id="welcome-user">Usuario: </div>
+        </header>
+
+        <!-- FONDO ANIMADO -->
+        <section class="hero-background">
+            <h1>ttunnySservice</h1>
+        </section>
+
+        <!-- SECCIÓN DE APARTADOS -->
+        <main class="services-container">
+            <h2 class="services-title">Nuestros Servicios</h2>
+            
+            <div class="services-grid">
+                
+                <!-- APARTADO 1: OPTIMIZACIONES -->
+                <div class="service-card">
+                    <div>
+                        <h3>Optimización PC</h3>
+                        <p>Mejora el rendimiento de tu sistema operativo y sácale el máximo provecho a tus componentes en juegos competitivos.</p>
+                    </div>
+                    <button class="btn-ver-mas" onclick="openModal('modal-opt')">Ver Detalles y Precio</button>
+                </div>
+
+                <!-- APARTADO 2: CREACIÓN DE LOGOS -->
+                <div class="service-card">
+                    <div>
+                        <h3>Diseño de Logos</h3>
+                        <p>Diseños totalmente personalizados con estéticas modernas, ideales para marcas personales, perfiles de streaming y gaming.</p>
+                    </div>
+                    <button class="btn-ver-mas" onclick="openModal('modal-logo')">Ver Detalles y Precio</button>
+                </div>
+
+                <!-- APARTADO 3: INTROS 3D -->
+                <div class="service-card">
+                    <div>
+                        <h3>Intros 3D Animadas</h3>
+                        <p>Animaciones tridimensionales de alto impacto visual para el inicio de tus videos, streams o contenido digital.</p>
+                    </div>
+                    <button class="btn-ver-mas" onclick="openModal('modal-intro')">Ver Detalles y Precio</button>
+                </div>
+
+            </div>
+        </main>
+
+        <!-- --- VENTANAS MODALES DE ESPECIFICACIONES --- -->
+
+        <!-- MODAL OPTIMIZACIÓN -->
+        <div id="modal-opt" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('modal-opt')">&times;</span>
+                <h2>Especificaciones de Optimización</h2>
+                <ul>
+                    <li>Optimización completa y profunda de Windows para Gaming.</li>
+                    <li>Aumento masivo y estabilidad de FPS.</li>
+                    <li>Reducción extrema de Input Lag y retraso del mouse/teclado.</li>
+                    <li>Configuración y calibración avanzada de emuladores.</li>
+                    <li>Limpieza completa de archivos basura y tweaks de Registro seguros.</li>
+                </ul>
+                <div class="price-tag">Precio Especial: <span>15$</span></div>
+            </div>
+        </div>
+
+        <!-- MODAL LOGOS -->
+        <div id="modal-logo" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('modal-logo')">&times;</span>
+                <h2>Especificaciones de Logos</h2>
+                <ul>
+                    <li>Diseño de Logotipo estilo Gaming / Esports o Corporativo.</li>
+                    <li>Tipografías personalizadas e imponentes.</li>
+                    <li>Entrega en alta resolución y formatos editables.</li>
+                    <li>Revisiones del diseño para asegurar que quede a tu gusto.</li>
+                </ul>
+                <div class="price-tag">Precio Especial: <span>7$</span></div>
+            </div>
+        </div>
+
+        <!-- MODAL INTROS -->
+        <div id="modal-intro" class="modal">
+            <div class="modal-content">
+                <span class="close-btn" onclick="closeModal('modal-intro')">&times;</span>
+                <h2>Especificaciones de Intros 3D</h2>
+                <ul>
+                    <li>Modelado y animación de logos en entornos 3D.</li>
+                    <li>Efectos especiales de iluminación y partículas (VFX).</li>
+                    <li>Sincronización de audio y efectos de sonido dinámicos.</li>
+                    <li>Formato adaptado a la plataforma que necesites (TikTok, YT, Twitch).</li>
+                </ul>
+                <div class="price-tag">Precio Especial: <span>4$</span></div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2026 ttunnySservice. Todos los derechos reservados. Rendimiento al Máximo Nivel.</p>
+        </footer>
+
+    </div>
+
+    <!-- CONTROLADORES CON JAVASCRIPT -->
+    <script>
+        // Función para obligar al usuario a logearse
+        function validarAcceso() {
+            const userValue = document.getElementById('user-input').value;
+            
+            if (userValue.trim() === "") {
+                alert("Por favor, pon tu nombre, apodo o apellido para poder ingresar.");
+            } else {
+                // Guarda el nombre, oculta la pantalla de bloqueo y muestra la web
+                document.getElementById('welcome-user').innerText = "Bienvenido, " + userValue;
+                document.getElementById('lock-screen').style.display = 'none';
+                document.getElementById('main-content').style.display = 'block';
+            }
+        }
+
+        // Funciones para abrir y cerrar ventanas modales
+        function openModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        // Cerrar el modal si se hace clic fuera del recuadro
+        window.onclick = function(event) {
+            if (event.target.classList.contains('modal')) {
+                event.target.style.display = 'none';
+            }
+        }
+    </script>
+
+</body>
+</html>
